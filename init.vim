@@ -42,7 +42,7 @@ set linebreak
 set number
 set relativenumber
 set cursorline
-set signcolumn=auto:1-3
+set signcolumn=yes:2
 
 set clipboard+=unnamedplus
 set mouse=nv
