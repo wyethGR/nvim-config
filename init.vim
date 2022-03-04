@@ -17,6 +17,8 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
 
 " General Tools
+"Plug 'vigoux/LanguageTool.nvim'
+"Plug 'rhysd/vim-grammarous'
 Plug 'windwp/nvim-autopairs'
 " Plug 'ptzz/lf.vim'
 " Plug 'voldikss/vim-floaterm'
@@ -49,33 +51,46 @@ set mouse=nv
 
 set completeopt=menu,menuone,noselect
 
-" colorscheme
-set termguicolors
-set background=dark
-colorscheme gruvbox
+" Auto-enable Goyo when editing markdown files
+autocmd BufNewFile,BufRead * Goyo!
+autocmd BufNewFile,BufRead *.md\|*.me Goyo
+
+" Load language tool automatically when editing a text file
+"autocmd Filetype text\|markdown\|nroff LanguageToolSetUp
+"autocmd User LanguageToolCheckDone LanguageToolSummary
 
 " Python executables locations, verify by running `:checkhealth`
 let g:python_host_prog = '/usr/bin/python'
 let g:python3_host_prog = '/usr/bin/python3'
 
+" Languagetool
+"let g:languagetool_server_jar='~/LanguageTool-5.6-stable/languagetool.jar'
+"highlight! LanguageToolGrammarError  guisp=blue gui=undercurl guibg=#0a0a0a guifg=#458588
+"highlight! LanguageToolSpellingError guisp=red  gui=undercurl guibg=#0a0a0a guifg=#b16286
+
 " Highlighting for better completion menus
 " gray
-highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#665c54
+highlight! CmpItemAbbrDeprecated  guibg=NONE guifg=#665c54 gui=strikethrough 
 " blue
-highlight! CmpItemAbbrMatch guibg=NONE guifg=#458588
-highlight! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#458588
+highlight! CmpItemAbbrMatch       guibg=NONE guifg=#458588
+highlight! CmpItemAbbrMatchFuzzy  guibg=NONE guifg=#458588
 " light blue
-highlight! CmpItemKindVariable guibg=NONE guifg=#93a598
-highlight! CmpItemKindInterface guibg=NONE guifg=#93a598
-highlight! CmpItemKindText guibg=NONE guifg=#93a598
+highlight! CmpItemKindVariable    guibg=NONE guifg=#93a598
+highlight! CmpItemKindInterface   guibg=NONE guifg=#93a598
+highlight! CmpItemKindText        guibg=NONE guifg=#93a598
 " pink
-highlight! CmpItemKindFunction guibg=NONE guifg=#b16286
-highlight! CmpItemKindMethod guibg=NONE guifg=#b16286
+highlight! CmpItemKindFunction    guibg=NONE guifg=#b16286
+highlight! CmpItemKindMethod      guibg=NONE guifg=#b16286
 " fg
-highlight! CmpItemKindKeyword guibg=NONE guifg=#f2e5bc
-highlight! CmpItemKindProperty guibg=NONE guifg=#f2e5bc
-highlight! CmpItemKindUnit guibg=NONE guifg=#f2e5bc
+highlight! CmpItemKindKeyword     guibg=NONE guifg=#f2e5bc
+highlight! CmpItemKindProperty    guibg=NONE guifg=#f2e5bc
+highlight! CmpItemKindUnit        guibg=NONE guifg=#f2e5bc
 " ----------------
+
+" colorscheme
+set termguicolors
+set background=dark
+colorscheme gruvbox
 
 " --- Key Binds ---
 " Enable spell check
@@ -154,12 +169,15 @@ lua <<EOF
     },
 
     mapping = {
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-k>'] = cmp.mapping.select_prev_item(),
-      ['<C-j>'] = cmp.mapping.select_next_item(),
-      ['<C-o>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.close();
+      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+      ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+      ['<C-o>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
       ['<CR>'] = cmp.mapping.confirm({
         behavior = cmp.ConfirmBehavior.Insert,
         select = true,
