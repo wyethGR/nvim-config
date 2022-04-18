@@ -3,6 +3,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Snippets
 Plug 'hrsh7th/vim-vsnip'
@@ -126,7 +127,7 @@ lua <<EOF
   
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
-  local on_attach = function(client)
+  local on_attach = function(client, bufnr)
     require "lsp_signature".on_attach({
       bind = true, -- This is mandatory, otherwise border config won't get registered.
       hint_enable = false,
