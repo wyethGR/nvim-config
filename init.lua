@@ -34,95 +34,36 @@ Plug 'ellisonleao/gruvbox.nvim'
 call plug#end()
 ]])
 
--- VIM SETTINGS --
--------------------------
-vim.opt.smarttab = true
-vim.opt.cindent = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
+-- Bring in basic settings/options
+require("settings") -- lua/settings.lua
 
-vim.opt.linebreak = true
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.signcolumn = 'yes:2'
+-- Bring in key bindings
+require("bindings") -- lua/bindings.lua
 
--- allow yank and put to/from system clipboard
-vim.opt.clipboard = vim.opt.clipboard + 'unnamedplus'
-vim.opt.mouse = 'nv'
-
-vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
--------------------------
--- END VIM SETTINGS --
-
--- Enable Goyo when editing markdown files
--- TODO: doesn't work
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = '*.md',
-  command = 'Goyo',
-})
-
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = '*',
-  command = 'Goyo!',
-})
-
--- Set python executable locations, verify nvim is happy with :checkhealth
--- TODO: can this be done with an api call
-vim.cmd([[
-let g:python_host_prog = '/usr/bin/python'
-let g:python3_host_prog = '/usr/bin/python3'
-]])
-
--- KEY BINDINGS --
--------------------------
-vim.api.nvim_set_keymap('', '<F6>', ':setlocal spell! spelllang=en_us<CR>', { nowait = true })
-
--- vsnip keyinds
--- jump forwards or backwards within snippet
-vim.api.nvim_set_keymap('i', '<Tab>', 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<Tab>"', { expr = true })
-vim.api.nvim_set_keymap('s', '<Tab>', 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<Tab>"', { expr = true })
-vim.api.nvim_set_keymap('i', '<S-Tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-next)" : "<S-Tab>"', { expr = true })
-vim.api.nvim_set_keymap('s', '<S-Tab>', 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-next)" : "<S-Tab>"', { expr = true })
--------------------------
--- END KEYBINDINGS --
-
--- LSPconfig Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.api.nvim_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-
+-- Setup LSP config
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
+local opts = { noremap = true, silent = true }
 local on_attach = function(client, bufnr)
-  require "lsp_signature".on_attach({
+  require("lsp_signature").on_attach({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
     hint_enable = false,
     handler_opts = {
-      border = "rounded"
+      border = 'rounded'
     }
   })
 
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- lua/bindings.lua
+  on_attach_lsp_config_bindings(bufnr)
 end
 
 local capablilities = vim.lsp.protocol.make_client_capabilities()
-capablilities = require('cmp_nvim_lsp').update_capabilities(capablilities)
+capablilities = require("cmp_nvim_lsp").update_capabilities(capablilities)
 
-local lspconfig = require('lspconfig')
+local lspconfig = require("lspconfig")
 local servers = { 'bashls', 'clangd', 'pyright' }
 
+-- setup each of the language servers
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -186,14 +127,10 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
-vim.api.nvim_set_hl(0, 'SpellBad', { ctermfg = "LightRed", cterm = { ['undercurl'] = true, ['italic'] = true }})
-vim.api.nvim_set_hl(0, 'SpellCap', { ctermfg = "Green", cterm = { ['undercurl'] = true, ['italic'] = true }})
-vim.api.nvim_set_hl(0, 'SpellRare', { ctermfg = "Cyan", cterm = { ['undercurl'] = true, ['italic'] = true }})
-vim.api.nvim_set_hl(0, 'SpellLocal', { ctermfg = "Yellow", cterm = { ['undercurl'] = true, ['italic'] = true }})
-
 -- TODO: doesn't seem to be doing anything at the moment
 require('spellsitter').setup{
-  hl = 'SpellBad',
+  --hl = { 'SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal' },
+  --hl = 'SpellBad',
   captures = { 'comment' },
 }
 
@@ -202,7 +139,3 @@ require('nvim-autopairs').setup{}
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
 
--- color scheme
-vim.opt.termguicolors = true
-vim.opt.background = 'dark'
-vim.cmd([[ colorscheme gruvbox ]])
