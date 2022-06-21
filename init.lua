@@ -47,9 +47,7 @@ local opts = { noremap = true, silent = true }
 local on_attach = function(client, bufnr)
   require("lsp_signature").on_attach({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
-    hint_enable = false,
-    handler_opts = {
-      border = 'rounded'
+    hint_enable = false
     }
   })
 
@@ -61,7 +59,7 @@ local capablilities = vim.lsp.protocol.make_client_capabilities()
 capablilities = require("cmp_nvim_lsp").update_capabilities(capablilities)
 
 local lspconfig = require("lspconfig")
-local servers = { 'bashls', 'clangd', 'pyright' }
+local servers = { 'bashls', 'clangd', 'pyright', 'marksman' }
 
 -- setup each of the language servers
 for _, lsp in ipairs(servers) do
@@ -102,7 +100,7 @@ cmp.setup({
   }, {
     { name = 'look', keyword_length = 5, max_item_count = 5, option = { convert_case = true, loud = true } }
   }, {
-    { name = 'path', max_item_count = 5 },
+    { name = 'path', max_item_count = 10 },
     { name = 'buffer', keyword_length = 5, max_item_count = 3 }
   }),
 
@@ -128,11 +126,11 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- TODO: doesn't seem to be doing anything at the moment
-require('spellsitter').setup{
-  --hl = { 'SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal' },
-  --hl = 'SpellBad',
-  captures = { 'comment' },
-}
+-- require('spellsitter').setup{
+--   --hl = { 'SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal' },
+--   --hl = 'SpellBad',
+--   captures = { 'comment' },
+-- }
 
 -- Insert ()'s after function or method completion item
 require('nvim-autopairs').setup{}
