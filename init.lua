@@ -6,7 +6,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'lewis6991/spellsitter.nvim'
 
 " Snippets
 Plug 'hrsh7th/vim-vsnip'
@@ -26,7 +25,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'Yggdroot/indentLine'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'vim-airline/vim-airline'
-Plug 'junegunn/goyo.vim'
 Plug 'https://github.com/tpope/vim-surround'
 
 " Theming
@@ -58,7 +56,7 @@ local capablilities = vim.lsp.protocol.make_client_capabilities()
 capablilities = require("cmp_nvim_lsp").update_capabilities(capablilities)
 
 local lspconfig = require("lspconfig")
-local servers = { 'bashls', 'clangd', 'pyright', 'marksman' }
+local servers = { 'bashls', 'clangd', 'pyright' }
 
 -- setup each of the language servers
 for _, lsp in ipairs(servers) do
@@ -124,15 +122,7 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- TODO: doesn't seem to be doing anything at the moment
--- require('spellsitter').setup{
---   --hl = { 'SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal' },
---   --hl = 'SpellBad',
---   captures = { 'comment' },
--- }
-
 -- Insert ()'s after function or method completion item
 require('nvim-autopairs').setup{}
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
-
