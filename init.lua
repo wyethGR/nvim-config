@@ -6,7 +6,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'lewis6991/spellsitter.nvim'
 
 " Snippets
 Plug 'hrsh7th/vim-vsnip'
@@ -26,7 +25,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'Yggdroot/indentLine'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'vim-airline/vim-airline'
-Plug 'junegunn/goyo.vim'
 Plug 'https://github.com/tpope/vim-surround'
 
 " Theming
@@ -47,10 +45,7 @@ local opts = { noremap = true, silent = true }
 local on_attach = function(client, bufnr)
   require("lsp_signature").on_attach({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
-    hint_enable = false,
-    handler_opts = {
-      border = 'rounded'
-    }
+    hint_enable = false
   })
 
   -- lua/bindings.lua
@@ -102,7 +97,7 @@ cmp.setup({
   }, {
     { name = 'look', keyword_length = 5, max_item_count = 5, option = { convert_case = true, loud = true } }
   }, {
-    { name = 'path', max_item_count = 5 },
+    { name = 'path', max_item_count = 10 },
     { name = 'buffer', keyword_length = 5, max_item_count = 3 }
   }),
 
@@ -115,7 +110,7 @@ cmp.setup({
 -- treesitter setup
 require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"
-  ensure_installed = { 'c', 'lua', 'java', 'javascript' },
+  ensure_installed = { 'c', 'python', 'lua', 'java', 'javascript' },
   
   highlight = {
     enable = true,
@@ -127,15 +122,7 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- TODO: doesn't seem to be doing anything at the moment
-require('spellsitter').setup{
-  --hl = { 'SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal' },
-  --hl = 'SpellBad',
-  captures = { 'comment' },
-}
-
 -- Insert ()'s after function or method completion item
 require('nvim-autopairs').setup{}
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
-

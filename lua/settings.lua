@@ -20,19 +20,6 @@ vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.g['python_host_prog'] = '/usr/bin/python'
 vim.g['python3_host_prog'] = '/usr/bin/python3'
 
-
--- Enable Goyo when editing markdown files
--- TODO: doesn't work
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = '*.md',
-  command = 'Goyo',
-})
-
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = '*',
-  command = 'Goyo!',
-})
-
 -- Highlighting and colorscheme
 vim.api.nvim_set_hl(0, 'SpellBad', { ctermfg = "LightRed", cterm = { ['undercurl'] = true, ['italic'] = true }})
 vim.api.nvim_set_hl(0, 'SpellCap', { ctermfg = "Green", cterm = { ['undercurl'] = true, ['italic'] = true }})
