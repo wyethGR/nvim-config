@@ -56,7 +56,7 @@ local capablilities = vim.lsp.protocol.make_client_capabilities()
 capablilities = require("cmp_nvim_lsp").update_capabilities(capablilities)
 
 local lspconfig = require("lspconfig")
-local servers = { 'bashls', 'clangd', 'pyright' }
+local servers = { 'bashls', 'clangd', 'pyright', 'hls' }
 
 -- setup each of the language servers
 for _, lsp in ipairs(servers) do
