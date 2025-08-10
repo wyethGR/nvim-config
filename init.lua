@@ -52,11 +52,10 @@ local on_attach = function(client, bufnr)
   on_attach_lsp_config_bindings(bufnr)
 end
 
-local capablilities = vim.lsp.protocol.make_client_capabilities()
-capablilities = require("cmp_nvim_lsp").update_capabilities(capablilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require("lspconfig")
-local servers = { 'bashls', 'clangd', 'pyright', 'hls' }
+local servers = { 'bashls', 'clangd', 'pyright' }
 
 -- setup each of the language servers
 for _, lsp in ipairs(servers) do
